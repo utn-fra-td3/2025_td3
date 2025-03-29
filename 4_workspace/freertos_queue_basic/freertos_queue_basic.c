@@ -31,7 +31,7 @@ void task_random(void *params) {
         // Genera un numero aleatorio (0 a 100)
         uint32_t random_number = rand() % 100;
         // Mando por cola
-        xQueueSendToBack(queue_random, &random_number, portMAX_DELAY);
+        xQueueSend(queue_random, &random_number, portMAX_DELAY);
         // Bloqueo tarea para no saturar
         vTaskDelay(pdMS_TO_TICKS(500));
     }
