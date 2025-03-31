@@ -51,8 +51,6 @@ void task_led(void *params) {
         xSemaphoreTake(semphr, portMAX_DELAY);
         // Conmuta el LED
         gpio_put(PICO_DEFAULT_LED_PIN, !gpio_get(PICO_DEFAULT_LED_PIN));
-        // Bloqueo chico para dar lugar a otra tarea
-        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
