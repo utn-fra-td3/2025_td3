@@ -23,6 +23,9 @@ void task_init(void *params) {
     gpio_set_dir(UP_BTN, false);
     gpio_set_dir(DW_BTN, false);
     gpio_set_dir(DEL_BTN, false);
+    gpio_pull_up(UP_BTN);
+    gpio_pull_up(DW_BTN);
+    gpio_pull_up(DEL_BTN);
     // Elimino la tarea para liberar recursos
     vTaskDelete(NULL);
 }
