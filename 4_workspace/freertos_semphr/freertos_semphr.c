@@ -21,8 +21,9 @@ void task_init(void *params) {
     // Inicializacion de GPIO para LED
     gpio_init(PICO_DEFAULT_LED_PIN);
     gpio_set_dir(PICO_DEFAULT_LED_PIN, true);
-    // Inicializacion de semaforo
+    // Inicializacion de semaforo y lo tomo para bloquar
     vSemaphoreCreateBinary(semphr);
+    xSemaphoreTake(semphr, portMAX_DELAY);
     // Elimino tarea para liberar recursos
     vTaskDelete(NULL);
 }
@@ -31,22 +32,14 @@ void task_init(void *params) {
  * @brief Tarea que maneja el semaforo
  */
 void task_semphr(void *params) {
-    // Estado anterior del semaforo
-    bool taken = false;
 
     while(1) {
-        // Intenta tomar el semaforo para bloquear la otra tarea
-        if(!taken) { 
-            xSemaphoreTake(semphr, portMAX_DELAY);
-            taken = true;
-        }
         // Entrega el semaforo al apretar el boton
         if(!gpio_get(SEMPHR_BTN)) {
             xSemaphoreGive(semphr);
-            taken = false;
         }
         // Bloqueo para dar lugar a otra tarea
-        vTaskDelay(pdMS_TO_TICKS(50));
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
@@ -60,10 +53,6 @@ void task_led(void *params) {
         xSemaphoreTake(semphr, portMAX_DELAY);
         // Conmuta el LED
         gpio_put(PICO_DEFAULT_LED_PIN, !gpio_get(PICO_DEFAULT_LED_PIN));
-        // Devuelve el semaforo
-        xSemaphoreGive(semphr);
-        // Bloqueo chico para dar lugar a otra tarea
-        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
