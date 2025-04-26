@@ -10,7 +10,7 @@ void led_on_task(void *pvParameters)
     while (1) 
     {
         gpio_put(LED_PIN, 1);
-        vTaskDelay(pdMS_TO_TICKS(1000));  // Encendido durante 1 segundo
+        vTaskDelay(pdMS_TO_TICKS(1500));  // Encendido durante 1 segundo
     }
 }
 
