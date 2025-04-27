@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/arm-none-eabi-g++",
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-arm64",
+            "compileCommands": [
+                "${workspaceFolder}/3_trabajos_practicos/tp1/firmware/build/compile_commands.json"
+            ]
+        }
+    ],
+    "version": 4
+}
