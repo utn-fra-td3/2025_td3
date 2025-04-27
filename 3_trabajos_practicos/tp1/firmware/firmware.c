@@ -25,7 +25,7 @@ void task_led_on(void *params) {
     while (true) {
         if (xSemaphoreTake(xMutex, portMAX_DELAY) == pdTRUE) {
             gpio_put(PICO_DEFAULT_LED_PIN, 1);  // Enciendo LED
-            vTaskDelay(pdMS_TO_TICKS(500));
+            vTaskDelay(pdMS_TO_TICKS(1000));
             xSemaphoreGive(xMutex);  // Libero mutex
         }
         vTaskDelay(pdMS_TO_TICKS(10));  // Pequeña espera antes de intentar de nuevo
@@ -36,7 +36,7 @@ void task_led_off(void *params) {
     while (true) {
         if (xSemaphoreTake(xMutex, portMAX_DELAY) == pdTRUE) {
             gpio_put(PICO_DEFAULT_LED_PIN, 0);  // Apago LED
-            vTaskDelay(pdMS_TO_TICKS(500));
+            vTaskDelay(pdMS_TO_TICKS(1500));
             xSemaphoreGive(xMutex);  // Libero mutex
         }
         vTaskDelay(pdMS_TO_TICKS(10));  // Pequeña espera antes de intentar de nuevo
