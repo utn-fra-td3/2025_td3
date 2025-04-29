@@ -29,8 +29,8 @@ void task_Tarea1(void *params) {
         // Toggle
         vTaskSuspend(handle_Tarea2);
         gpio_put(PICO_DEFAULT_LED_PIN, true);
-        // Demora de ticks equivalentes a 1000 ms
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        // Demora de ticks equivalentes a 500 ms
+        vTaskDelay(pdMS_TO_TICKS(500));
         vTaskResume(handle_Tarea2);
         vTaskSuspend(handle_Tarea1);
         //TENGO QUE BLOQUEAR LA TAREA
@@ -45,8 +45,8 @@ void task_Tarea2(void *params) {
     while(1) {
         // Toggle
         gpio_put(PICO_DEFAULT_LED_PIN, false);
-        // Demora de ticks equivalentes a 1500 ms
-        vTaskDelay(pdMS_TO_TICKS(1500));
+        // Demora de ticks equivalentes a 500 ms
+        vTaskDelay(pdMS_TO_TICKS(500));
         vTaskResume(handle_Tarea1);
     }
 }
