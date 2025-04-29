@@ -71,8 +71,8 @@ static void Encendido(void *pvParameters){
 		/* Suspendo la Tarea 2 */
 		vTaskSuspend(Tarea2Handle);
 
-		/*Demora de 1000 ms*/
-		vTaskDelay(1000/portTICK_PERIOD_MS);
+		/*Demora de 500 ms*/
+		vTaskDelay(500/portTICK_PERIOD_MS);
 
 		/* Habilito la Tarea 2 */
 		vTaskResume(Tarea2Handle);
@@ -91,8 +91,8 @@ static void Apagado(void *pvParameters){
 		/* Suspendo la Tarea 1 */
 		vTaskSuspend(Tarea1Handle);
 
-		/*Demora de 1500 ms*/
-		vTaskDelay(1500/portTICK_PERIOD_MS); //Relativiza la demora al tiempo del scheduler
+		/*Demora de 500 ms*/
+		vTaskDelay(500/portTICK_PERIOD_MS); //Relativiza la demora al tiempo del scheduler
 
 		/* Habilito la Tarea 1 */
 		vTaskResume(Tarea1Handle);
