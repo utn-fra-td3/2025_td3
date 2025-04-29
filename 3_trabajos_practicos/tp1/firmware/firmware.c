@@ -4,6 +4,11 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+// Definicion de tiempos del led
+#define LED_ON_TIME 1000 // en ms
+#define LED_OFF_TIME 1500 // en ms
+
+
 /**
  * @brief Tarea de inicializacion
  */
@@ -24,7 +29,7 @@ void task_led_on(void *params) {
     while(1) {
         gpio_put(PICO_DEFAULT_LED_PIN, 1);
         // Demora de ticks equivalentes a 500 ms
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(LED_ON_TIME + LED_OFF_TIME));
     }
 }
 /**
@@ -32,11 +37,11 @@ void task_led_on(void *params) {
  */
 void task_led_off(void *params) {
     
-    vTaskDelay(pdMS_TO_TICKS(500));
+    vTaskDelay(pdMS_TO_TICKS(LED_ON_TIME));
     while(1) {
         gpio_put(PICO_DEFAULT_LED_PIN, 0);
         // Demora de ticks equivalentes a 500 ms
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(LED_ON_TIME + LED_OFF_TIME));
     }
 }
 
