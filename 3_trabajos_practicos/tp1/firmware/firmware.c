@@ -5,8 +5,8 @@
 #include "freeRTOS.h"
 #include "task.h"
 
-#define T_ON 500 // Tiempo en ms
-#define T_OFF 500 // Tiempo en ms
+#define T_ON 1000 // Tiempo en ms
+#define T_OFF 1500 // Tiempo en ms
 
 void task_on(void *params) {
     while (1) {
