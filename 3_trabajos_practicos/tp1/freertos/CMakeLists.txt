@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 project(freertos)
 
 # Conditionally set Pico core (RP2350_ARM_NTZ for pico2 / RP2040 for pico)
-if(${PICO_BOARD} STREQUAL "pico2")
+if(${PICO_BOARD} STREQUAL "pico2_w")
     set(CORE RP2350_ARM_NTZ)
 elseif(${PICO_BOARD} STREQUAL "pico")
     set(CORE RP2040)
