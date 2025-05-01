@@ -15,8 +15,8 @@ void task_encendido(void *params) {
     while(1) {
         vTaskSuspend(handle_Task_Apagado);
         gpio_put(PICO_DEFAULT_LED_PIN, true);
-        // Demora de ticks equivalentes a 500 ms
-        vTaskDelay(pdMS_TO_TICKS(500));
+        // Demora de ticks equivalentes a 1000 ms
+        vTaskDelay(pdMS_TO_TICKS(1000));
         vTaskResume(handle_Task_Apagado);
         vTaskSuspend(NULL);
     }
@@ -26,8 +26,8 @@ void task_apagado(void *params) {
     
     while(1) {
         gpio_put(PICO_DEFAULT_LED_PIN, false);
-        // Demora de ticks equivalentes a 500 ms
-        vTaskDelay(pdMS_TO_TICKS(500));
+        // Demora de ticks equivalentes a 1500 ms
+        vTaskDelay(pdMS_TO_TICKS(1500));
         vTaskResume(handle_Task_Encendido);
     }
 }
