@@ -1,4 +1,6 @@
 {
+    "cortex-debug.openocdPath": "/usr/local/bin/openocd",
+    "cortex-debug.armToolchainPath": "/home/m6t6ng6/.pico-sdk/toolchain/14_2_Rel1/bin/",
     "cmake.options.statusBarVisibility": "hidden",
     "cmake.options.advanced": {
         "build": {
