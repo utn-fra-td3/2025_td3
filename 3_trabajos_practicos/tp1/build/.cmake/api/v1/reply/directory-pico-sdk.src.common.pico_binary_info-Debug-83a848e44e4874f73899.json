@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "pico-sdk/src/common/pico_binary_info",
+		"source" : "/Users/m6t6ng6/.pico-sdk/sdk/2.1.1/src/common/pico_binary_info"
+	}
+}

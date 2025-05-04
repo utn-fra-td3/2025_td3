@@ -12,7 +12,7 @@
         "runToEntryPoint": "main",
         "gdbTarget": "localhost:3333",
         "svdFile": "${workspaceRoot}/pico-sdk/src/rp2040/hardware_regs/rp2040.svd",
-        "preLaunchTask": "Build",
+        "preLaunchTask": "Compile Project",
         "postRestartCommands": [
           "break main",
           "continue"
