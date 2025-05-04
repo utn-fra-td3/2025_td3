@@ -5,7 +5,6 @@
 #include "task.h"
 #include "semphr.h"
 
-// Definimos un manejador de mutex
 SemaphoreHandle_t xMutex;
 
 void task_init(void *params) {
@@ -25,10 +24,11 @@ void task_led_on(void *params) {
     while (true) {
         if (xSemaphoreTake(xMutex, portMAX_DELAY) == pdTRUE) {
             gpio_put(PICO_DEFAULT_LED_PIN, 1);  // Enciendo LED
+            printf("LED encendido\n");
             vTaskDelay(pdMS_TO_TICKS(1000));
             xSemaphoreGive(xMutex);  // Libero mutex
         }
-        vTaskDelay(pdMS_TO_TICKS(10));  // Pequeña espera antes de intentar de nuevo
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 
@@ -36,16 +36,20 @@ void task_led_off(void *params) {
     while (true) {
         if (xSemaphoreTake(xMutex, portMAX_DELAY) == pdTRUE) {
             gpio_put(PICO_DEFAULT_LED_PIN, 0);  // Apago LED
+            printf("LED apagado\n");
             vTaskDelay(pdMS_TO_TICKS(1500));
             xSemaphoreGive(xMutex);  // Libero mutex
         }
-        vTaskDelay(pdMS_TO_TICKS(10));  // Pequeña espera antes de intentar de nuevo
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 
 int main()
 {
     stdio_init_all();
+
+    // Esperar a que el USB CDC esté listo (opcional, pero recomendado)
+    sleep_ms(3000);
 
     xTaskCreate(task_init, "Init", 128, NULL, 2, NULL);
     xTaskCreate(task_led_on, "LED ON", 128, NULL, 1, NULL);

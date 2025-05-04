@@ -45,7 +45,7 @@ pico_set_program_version(firmware "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(firmware 0)
-pico_enable_stdio_usb(firmware 0)
+pico_enable_stdio_usb(firmware 1)
 
 # Add the standard library to the build
 target_link_libraries(firmware
