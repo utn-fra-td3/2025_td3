@@ -7,8 +7,8 @@
 #include "pico/cyw43_arch.h"
 #endif
 
-#define configTurnOnTime 500
-#define configTurnOffTime 500
+#define configTurnOnTime 1000
+#define configTurnOffTime 1500
 
 #define LED_PIN 0
 
