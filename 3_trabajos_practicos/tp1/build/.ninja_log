@@ -1,8 +1,0 @@
-# ninja log v6
-28	52	1746320634938758119	pico-sdk/src/rp2350/boot_stage2/bs2_default.elf	954d484bb46795
-85	173	1746320634995050093	pico-sdk/src/rp2350/boot_stage2/CMakeFiles/bs2_default_library.dir/bs2_default_padded_checksummed.S.o	9dbf9a163647c03e
-59	84	1746320634992747603	pico-sdk/src/rp2350/boot_stage2/bs2_default_padded_checksummed.S	f55fdf0d8df8608c
-5	28	1746320634915776307	pico-sdk/src/rp2350/boot_stage2/CMakeFiles/bs2_default.dir/compile_time_choice.S.o	2470334c7320867c
-52	59	1746320634969010614	pico-sdk/src/rp2350/boot_stage2/bs2_default.bin	867f073ed25c2e82
-52	59	1746320634969010614	/Users/m6t6ng6/Documents/TD3_VM/repo/3_trabajos_practicos/tp1/build/pico-sdk/src/rp2350/boot_stage2/bs2_default.bin	867f073ed25c2e82
-59	84	1746320634992747603	/Users/m6t6ng6/Documents/TD3_VM/repo/3_trabajos_practicos/tp1/build/pico-sdk/src/rp2350/boot_stage2/bs2_default_padded_checksummed.S	f55fdf0d8df8608c
