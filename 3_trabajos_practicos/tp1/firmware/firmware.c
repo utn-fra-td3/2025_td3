@@ -4,8 +4,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#define LED_ON 500 // en ms
-#define LED_OFF 500 // en ms
+#define LED_ON 1000 // en ms
+#define LED_OFF 1500 // en ms
 
 /**
  * @brief Tareas de blinky de LED
