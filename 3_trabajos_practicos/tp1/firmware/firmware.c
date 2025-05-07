@@ -24,8 +24,10 @@ void task_blinky(void *params) {
     while(1) {
         // Toggle
         gpio_put(PICO_DEFAULT_LED_PIN, !gpio_get(PICO_DEFAULT_LED_PIN));
-        // Demora de ticks equivalentes a 500 ms
-        vTaskDelay(pdMS_TO_TICKS(500));
+         vTaskDelay(pdMS_TO_TICKS(1000));
+
+        gpio_put(PICO_DEFAULT_LED_PIN_INVERTED, !gpio_get(PICO_DEFAULT_LED_PIN));
+        vTaskDelay(pdMS_TO_TICKS(3000));
     }
 }
 
