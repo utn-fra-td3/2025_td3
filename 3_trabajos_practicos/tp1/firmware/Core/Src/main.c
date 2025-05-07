@@ -56,19 +56,19 @@ static void MX_GPIO_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 static void LedOn(void *pvParameters){
-	vTaskDelay(500);
+
 	while(1){
  		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-		vTaskDelay(1000);
+		vTaskDelay(2500);
 	}
 
 }
 
 static void LedOff(void *pvParameters){
-
+	vTaskDelay(1000);
 	while(1){
 		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-		vTaskDelay(1000);
+		vTaskDelay(2500);
 	}
 
 }
