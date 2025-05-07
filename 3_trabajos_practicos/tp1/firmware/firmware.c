@@ -3,8 +3,8 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
-#define on 1000
-#define off 1500
+#define on 500
+#define off 500
 
 /**
  * @brief Tarea de blinky de LED
