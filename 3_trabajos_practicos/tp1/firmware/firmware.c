@@ -22,8 +22,8 @@ static void task_LedOn(void *pvParameters){
 		// Enciendo el led
 		gpio_put(LED_PIN, true);
 
-		// Delay 500 ms
-        vTaskDelay(pdMS_TO_TICKS(500));
+		// Delay 1000 ms
+        vTaskDelay(pdMS_TO_TICKS(1000));
 
 		// Habilito la tarea LedOff
 		vTaskResume(hLedOff);
@@ -40,8 +40,8 @@ static void task_LedOff(void *pvParameters){
 		// Apago el led
         gpio_put(LED_PIN, false);
 
-		// Delay 500 ms
-        vTaskDelay(pdMS_TO_TICKS(500));
+		// Delay 1500 ms
+        vTaskDelay(pdMS_TO_TICKS(1500));
 
 		// Habilito la tarea LedOn
 		vTaskResume(hLedOn);
