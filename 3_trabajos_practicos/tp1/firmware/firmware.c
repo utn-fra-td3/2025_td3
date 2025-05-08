@@ -27,7 +27,7 @@ void task_blinky_off(void *params) {
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
         // Demora de ticks equivalentes a 500 ms
         
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(1000));
         vTaskResume(Blinky_On);
         vTaskSuspend(Blinky_Off);
     }
@@ -39,7 +39,7 @@ void task_blinky_on(void *params) {
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
         // Demora de ticks equivalentes a 500 ms
         
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(1500));
         vTaskResume(Blinky_Off);
         vTaskSuspend(Blinky_On);
     }
