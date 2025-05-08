@@ -5,7 +5,9 @@
 #include "task.h"
 #include "pico/cyw43_arch.h"
 
-#define DELAY 500
+#define DELAY_ON 1000
+#define DELAY_OFF 1500
+
 
 // Creo el handle de ambas tareas (sus referencias)
 TaskHandle_t Handle_blinkON = NULL;
@@ -31,7 +33,7 @@ void task_blinkON(void *params) {
         // Enciendo el led
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
         // Demora de ticks equivalentes a DELAY ms
-        vTaskDelay(pdMS_TO_TICKS(DELAY));
+        vTaskDelay(pdMS_TO_TICKS(DELAY_ON));
         // Activo la otra
         vTaskResume(Handle_blinkOFF);
         //Suspendo la tarea de apagado, y activo la otra
@@ -48,7 +50,7 @@ void task_blinkON(void *params) {
         // Apago el led
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
         // Demora de ticks equivalentes a DELAY ms
-        vTaskDelay(pdMS_TO_TICKS(DELAY));
+        vTaskDelay(pdMS_TO_TICKS(DELAY_OFF));
         // Activo la otra
         vTaskResume(Handle_blinkON);
         //Suspendo la tarea de encendido, y activo la otra
