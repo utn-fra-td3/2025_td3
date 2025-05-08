@@ -59,16 +59,16 @@ static void LedOn(void *pvParameters){
 
 	while(1){
  		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-		vTaskDelay(1000);
+		vTaskDelay(2500);
 	}
 
 }
 
 static void LedOff(void *pvParameters){
-	vTaskDelay(500);
+	vTaskDelay(1000);
 	while(1){
 		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-		vTaskDelay(1000);
+		vTaskDelay(2500);
 	}
 
 }
