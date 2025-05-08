@@ -23,18 +23,18 @@ if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 # ====================================================================================
-set(PICO_BOARD pico CACHE STRING "Board type")
+set(PICO_BOARD pico2_w CACHE STRING "Board type")
 
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
 project(firmware C CXX ASM)
 
+# Add external FreeRTOS library
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../freertos ${CMAKE_BINARY_DIR}/freertos)
+
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
-
-# Add external FreeRTOS library
-add_subdirectory(/freertos ${CMAKE_BINARY_DIR}/freertos)
 
 # Add executable. Default name is the project name, version 0.1
 
@@ -50,12 +50,18 @@ pico_enable_stdio_usb(firmware 0)
 # Add the standard library to the build
 target_link_libraries(firmware
         pico_stdlib
-        freertos)
+        freertos
+        pico_cyw43_arch_none)
 
 # Add the standard include files to the build
 target_include_directories(firmware PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
 )
+
+# Add any user requested libraries
+target_link_libraries(firmware 
+        
+        )
 
 pico_add_extra_outputs(firmware)
 
