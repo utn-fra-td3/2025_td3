@@ -31,8 +31,8 @@ static void task_LedOn(void *pvParameters){
 		// Enciendo el led
 		gpio_put(LED_PIN, true);
 
-		// Delay 500 ms
-        vTaskDelay(pdMS_TO_TICKS(500));			//	BLOCKEA LA TAREA POR LA CANTIDAD DE TICKS QUE LE DIGO. CADA TICK ES 1ms. TERMINA EL TIEMPO Y LA TAREA SE DESBLOQUEA
+		// Delay 1000 ms
+        vTaskDelay(pdMS_TO_TICKS(1000));			//	BLOCKEA LA TAREA POR LA CANTIDAD DE TICKS QUE LE DIGO. CADA TICK ES 1ms. TERMINA EL TIEMPO Y LA TAREA SE DESBLOQUEA
 
 												//	BLOCKEO POR SOFT (vtaskDELAY), o POR UN EVENTO DE HARDWARE (por ejemplo un boton)
 
@@ -54,8 +54,8 @@ static void task_LedOff(void *pvParameters){
 		// Apago el led
         gpio_put(LED_PIN, false);
 
-		// Delay 500 ms
-        vTaskDelay(pdMS_TO_TICKS(500));
+		// Delay 1500 ms
+        vTaskDelay(pdMS_TO_TICKS(1500));
 
 		// Habilito la tarea LedOn
 		vTaskResume(hLedOn);
