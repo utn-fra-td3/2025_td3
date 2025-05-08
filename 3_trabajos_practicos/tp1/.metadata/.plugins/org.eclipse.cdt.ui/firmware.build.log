@@ -1,4 +1,4 @@
-23:32:59 **** Incremental Build of configuration Debug for project firmware ****
+00:26:50 **** Incremental Build of configuration Debug for project firmware ****
 make -j8 all 
 arm-none-eabi-size   firmware.elf 
    text	   data	    bss	    dec	    hex	filename
@@ -6,5 +6,5 @@ arm-none-eabi-size   firmware.elf
 Finished building: default.size.stdout
  
 
-23:32:59 Build Finished. 0 errors, 0 warnings. (took 212ms)
+00:26:51 Build Finished. 0 errors, 0 warnings. (took 279ms)
 
