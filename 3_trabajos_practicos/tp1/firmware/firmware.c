@@ -20,22 +20,26 @@ void task_init(void *params) {
  * @brief Tarea de blinky de LED
  */
 void task_encendido(void *params) {
-    vTaskDelay(pdMS_TO_TICKS(500)); 
+
+    vTaskDelay(pdMS_TO_TICKS(1000)); 
+
     while(1) {
         // Toggle
         gpio_put(PICO_DEFAULT_LED_PIN, 0);
 
         // Demora de ticks equivalentes a 500 ms
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(2500));
     }
 }
 void task_apagado(void *params) {
-    
+
+   
+
     while(1) {
         // Toggle
         gpio_put(PICO_DEFAULT_LED_PIN, 1);
         // Demora de ticks equivalentes a 500 ms
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(2500));
     }
 }
 
