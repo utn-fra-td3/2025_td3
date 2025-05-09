@@ -5,6 +5,30 @@
 #include "task.h"
 
 /**
+ * @brief Tarea para encender el LED
+ */
+void task_led_on(void *params) {
+    while (1) {
+        // Encender el LED
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
+        // Mantener encendido por 1000 ms
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+
+/**
+ * @brief Tarea para apagar el LED
+ */
+void task_led_off(void *params) {
+    while (1) {
+        // Apagar el LED
+        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
+        // Mantener apagado por 1500 ms
+        vTaskDelay(pdMS_TO_TICKS(1500));
+    }
+}
+
+/**
  * @brief Tarea de inicializacion
  */
 void task_init(void *params) {
@@ -16,19 +40,6 @@ void task_init(void *params) {
 }
 
 /**
- * @brief Tarea de blinky de LED
- */
-void task_blinky(void *params) {
-    
-    while(1) {
-        // Toggle
-        cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, !cyw43_arch_gpio_get(CYW43_WL_GPIO_LED_PIN));
-        // Demora de ticks equivalentes a 500 ms
-        vTaskDelay(pdMS_TO_TICKS(500));
-    }
-}
-
-/**
  * @brief Programa principal
  */
 int main(void) {
@@ -36,9 +47,10 @@ int main(void) {
 
     // Creacion de tareas
     xTaskCreate(task_init, "Init", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
-    xTaskCreate(task_blinky, "Blinky", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+    xTaskCreate(task_led_on, "LED On", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+    xTaskCreate(task_led_off, "LED Off", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 
     // Arranca el scheduler
     vTaskStartScheduler();
-    while(1);
+    while (1);
 }
