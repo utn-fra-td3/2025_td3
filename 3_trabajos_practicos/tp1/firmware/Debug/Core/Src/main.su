@@ -1,7 +1,0 @@
-main.c:65:13:Encendido	16	static
-main.c:85:13:Apagado	16	static
-main.c:110:5:main	16	static
-main.c:157:6:SystemClock_Config	72	static
-main.c:196:13:MX_GPIO_Init	40	static
-main.c:229:6:HAL_TIM_PeriodElapsedCallback	16	static
-main.c:246:6:Error_Handler	4	static,ignoring_inline_asm

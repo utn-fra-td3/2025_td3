@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;tp1/Core/Src/main.c&apos; to &apos;firmware.c&apos;" description="Rename resource &apos;main.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Src/main.c" name="firmware.c" stamp="1745888484715" updateReferences="true"/>
-</session>
