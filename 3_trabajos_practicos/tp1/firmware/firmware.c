@@ -4,8 +4,8 @@
 #include "task.h"
 
 #define LED_PIN 25
-#define on 500   // Tiempo que el LED está encendido (ms)
-#define off 500  // Tiempo que el LED está apagado (ms)
+#define on 1000   // Tiempo que el LED está encendido (ms)
+#define off 1500  // Tiempo que el LED está apagado (ms)
 
 void encender_led_task(void *pvParameters) { // Se crea la función encender_led_task.
     while (1) {
