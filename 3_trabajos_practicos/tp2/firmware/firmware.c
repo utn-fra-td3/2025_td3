@@ -5,7 +5,7 @@
 #include "task.h"
 #include "queue.h"
 
-#define ADC_MAX_VALUE (1 << 12) - 1   // 4095
+#define ADC_MAX_VALUE ((1 << 12) - 1)   // 4095
 
 // Definición de la cola
 QueueHandle_t tempQueue;
