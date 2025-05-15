@@ -4,6 +4,11 @@ project(freertos)
 # Conditionally set Pico core (RP2350_ARM_NTZ for pico2 / RP2040 for pico)
 if(${PICO_BOARD} STREQUAL "pico2")
     set(CORE RP2350_ARM_NTZ)
+<<<<<<< HEAD
+=======
+elseif(${PICO_BOARD} STREQUAL "pico2_w")
+    set(CORE RP2350_ARM_NTZ)
+>>>>>>> f903b578cec92fdc1b7ccb64fa33e9d21d28ade9
 elseif(${PICO_BOARD} STREQUAL "pico")
     set(CORE RP2040)
 endif()
