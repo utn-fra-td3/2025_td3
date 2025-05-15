@@ -5,6 +5,8 @@
 #include "task.h"
 #include "queue.h"
 
+#define ADC_MAX_VALUE (1 << 12) - 1   // 4095
+
 // Definición de la cola
 QueueHandle_t tempQueue;
 
@@ -44,7 +46,7 @@ void vTaskTempSensor(void *params) {
     while (1) {
         adc_select_input(4);   //hago selección del canal antes de tomar la medicion
         uint16_t raw = adc_read();  //variable que captura la medición del adc de 12 bits: 4096
-        float voltage = raw * 3.3f / 4095;
+        float voltage = raw * 3.3f / ADC_MAX_VALUE;
         float temperature = 27.0f - (voltage - 0.706f) / 0.001721f;   //transforma en función de la ecuación del datasheet
 
         // Envía temperatura a la cola
