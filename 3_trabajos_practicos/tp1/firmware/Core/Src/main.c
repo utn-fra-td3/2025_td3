@@ -56,10 +56,10 @@ static void MX_GPIO_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 static void LuzPrende(void*pvParameters){
-	vTaskDelay(500);
+	vTaskDelay(1500);
 	while(1){
 		HAL_GPIO_WritePin(LUZ_GPIO_Port, LUZ_Pin, GPIO_PIN_RESET);
-		vTaskDelay(1000);
+		vTaskDelay(2500);
 	}
 }
 
@@ -67,7 +67,7 @@ static void LuzApaga(void*pvParameters){
 
 	while(1){
 		HAL_GPIO_WritePin(LUZ_GPIO_Port, LUZ_Pin, GPIO_PIN_SET);
-		vTaskDelay(1000);
+		vTaskDelay(2500);
 	}
 }
 /* USER CODE END 0 */
