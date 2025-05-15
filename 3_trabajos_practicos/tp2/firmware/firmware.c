@@ -1,70 +1,108 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
+#include "hardware/irq.h"
+#include "hardware/dma.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 
-#define ADC_MAX_VALUE ((1 << 12) - 1)   // 4095
+#define ADC_MAX_VALUE ((1 << 12) - 1)  // 4095
+#define NUM_SAMPLES 16
 
-// Definición de la cola
+uint16_t adc_buffer[NUM_SAMPLES];
+int dma_chan;
+
+typedef struct {
+    uint16_t raw;
+    float tempC;
+} tempData_t;
+
+// Cola para pasar los datos desde la ISR
 QueueHandle_t tempQueue;
 
 // Prototipos
-void vTaskTempSensor(void *params);
-void vTaskTempConsumer(void *params);
+void vTaskDisparaADC(void *params);
+void vTaskMuestraTemp(void *params);
+void dma_handler();
+
+void dma_handler() {
+    dma_hw->ints0 = 1u << dma_chan;  // Limpia bandera de interrupción DMA
+    adc_run(false);  // Detiene el ADC
+
+    for (int i = 0; i < NUM_SAMPLES; i++) {
+        float voltage = adc_buffer[i] * 3.3f / ADC_MAX_VALUE;
+        float tempC = 27.0f - (voltage - 0.706f) / 0.001721f;
+        tempData_t data = {.raw = adc_buffer[i], .tempC = tempC};
+        BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+        xQueueSendFromISR(tempQueue, &data, &xHigherPriorityTaskWoken);
+        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    }
+}
 
 int main() {
-    stdio_init_all();  // Inicializa la consola USB
+    stdio_init_all();
+    sleep_ms(3000);  // Da tiempo a que se conecte la consola USB
 
-    // Inicializa ADC
+    // Inicializa ADC y su canal
     adc_init();
-    adc_set_temp_sensor_enabled(true);  //activo el sensor interno de temperatura que esta onchip
-    adc_select_input(4);  // Canal interno - me paro en el canal que quiero medir
+    adc_set_temp_sensor_enabled(true);
+    adc_fifo_setup(true, true, 1, false, false);
+    adc_run(false);  // Lo iniciaremos manualmente
 
-    // Crea cola de 1 posicion tipo float ya que hace "send" y "receive" constantemente, no me interesa guardar
-    tempQueue = xQueueCreate(1, sizeof(float));   //tamaño y tipo de dato
+    // Configura DMA
+    dma_chan = dma_claim_unused_channel(true);
+    dma_channel_config cfg = dma_channel_get_default_config(dma_chan);
+    channel_config_set_transfer_data_size(&cfg, DMA_SIZE_16);
+    channel_config_set_read_increment(&cfg, false);
+    channel_config_set_write_increment(&cfg, true);
+    channel_config_set_dreq(&cfg, DREQ_ADC);
+
+    dma_channel_configure(
+        dma_chan, &cfg,
+        adc_buffer, &adc_hw->fifo,
+        NUM_SAMPLES, false
+    );
+
+    dma_channel_set_irq0_enabled(dma_chan, true);
+    irq_set_exclusive_handler(DMA_IRQ_0, dma_handler);
+    irq_set_enabled(DMA_IRQ_0, true);
+
+    // Crea cola
+    tempQueue = xQueueCreate(64, sizeof(tempData_t));
     if (tempQueue == NULL) {
-        printf("Error: no se pudo crear la cola\n");
+        printf("Error creando la cola\n");
         while (1);
     }
 
     // Crea tareas
-    xTaskCreate(vTaskTempSensor, "TempSensor", 2 * configMINIMAL_STACK_SIZE, NULL, 1, NULL);   //prioridad 1, 2 * 128 palabras
-    xTaskCreate(vTaskTempConsumer, "TempConsumer", 2 * configMINIMAL_STACK_SIZE, NULL, 1, NULL);   //prioridad 1, 2 * 128 palabras
+    xTaskCreate(vTaskDisparaADC, "DisparaADC", 2 * configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+    xTaskCreate(vTaskMuestraTemp, "MuestraTemp", 2 * configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 
     // Inicia scheduler
     vTaskStartScheduler();
 
-    // Nunca debe llegar aquí
     while (1);
     return 0;
 }
 
-// Tarea que lee temperatura y la manda a la cola
-void vTaskTempSensor(void *params) {
+// Tarea que dispara la conversión ADC periódicamente con DMA
+void vTaskDisparaADC(void *params) {
     while (1) {
-        adc_select_input(4);   //hago selección del canal antes de tomar la medicion
-        uint16_t raw = adc_read();  //variable que captura la medición del adc de 12 bits: 4096
-        float voltage = raw * 3.3f / ADC_MAX_VALUE;
-        float temperature = 27.0f - (voltage - 0.706f) / 0.001721f;   //transforma en función de la ecuación del datasheet
-
-        // Envía temperatura a la cola
-        if (xQueueSend(tempQueue, &temperature, 0) != pdPASS) {  //&temperature -> direccion de memoria donde ESTA la medicion
-            printf("Cola llena: no se pudo enviar temperatura\n");
-        }
-
+        adc_select_input(4);       // Canal del sensor de temperatura interno
+        adc_fifo_drain();          // Limpia FIFO antes de nueva medición
+        dma_channel_start(dma_chan);  // Inicia transferencia DMA
+        adc_run(true);             // Inicia ADC
         vTaskDelay(pdMS_TO_TICKS(5000));  // Espera 5 segundos
     }
 }
 
-// Tarea que consume temperatura desde la cola
-void vTaskTempConsumer(void *params) {
-    float receivedTemp;  //variable que guarda el valor obtenido de la cola
+// Tarea que recibe valores desde la cola y muestra por consola
+void vTaskMuestraTemp(void *params) {
+    tempData_t data;
     while (1) {
-        // Espera indefinidamente por un mensaje
-        if (xQueueReceive(tempQueue, &receivedTemp, portMAX_DELAY) == pdTRUE) {  //&receivedTemp -> direccion de memoria donde GUARDO la medicion
-            printf("Temperatura recibida: %.2f °C\n", receivedTemp);
+        if (xQueueReceive(tempQueue, &data, portMAX_DELAY) == pdTRUE) {
+            printf("Temperatura: %.2f °C (raw: %u)\n", data.tempC, data.raw);
         }
     }
 }
