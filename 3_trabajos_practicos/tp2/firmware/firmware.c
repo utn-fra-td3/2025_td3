@@ -28,8 +28,8 @@ int main() {
     }
 
     // Crea tareas
-    xTaskCreate(vTaskTempSensor, "TempSensor", configMINIMAL_STACK_SIZE, NULL, 1, NULL);   //prioridad 1, 128 palabras
-    xTaskCreate(vTaskTempConsumer, "TempConsumer", configMINIMAL_STACK_SIZE, NULL, 1, NULL);   //prioridad 1, 128 palabras
+    xTaskCreate(vTaskTempSensor, "TempSensor", 2 * configMINIMAL_STACK_SIZE, NULL, 1, NULL);   //prioridad 1, 2 * 128 palabras
+    xTaskCreate(vTaskTempConsumer, "TempConsumer", 2 * configMINIMAL_STACK_SIZE, NULL, 1, NULL);   //prioridad 1, 2 * 128 palabras
 
     // Inicia scheduler
     vTaskStartScheduler();
