@@ -21,7 +21,7 @@ void task_encendido(void *params)
     while(1) 
     {
         gpio_put(PICO_DEFAULT_LED_PIN, 1);
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(1000));
         vTaskResume(off);
         vTaskSuspend(NULL);
     }
@@ -32,7 +32,7 @@ void task_apagado(void *params)
     while(1) 
     {
         gpio_put(PICO_DEFAULT_LED_PIN, 0);
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(1500));
         vTaskResume(on);
         vTaskSuspend(NULL);
     }
