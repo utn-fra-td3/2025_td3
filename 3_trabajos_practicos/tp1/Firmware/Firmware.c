@@ -17,7 +17,7 @@ TaskHandle_t encender1, apagar2;
         gpio_put(PICO_DEFAULT_LED_PIN, 1);
 
         // Demora de encendido equivalentes a 500 ms
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(1000));
 
         // Me qudo preparadopara la próxima vez
        vTaskResume(apagar2);
@@ -36,7 +36,7 @@ TaskHandle_t encender1, apagar2;
             gpio_put(PICO_DEFAULT_LED_PIN, 0);
 
             // Demora de apagado equivalentes a 500 ms
-            vTaskDelay(pdMS_TO_TICKS(500));
+            vTaskDelay(pdMS_TO_TICKS(1500));
 
             // Me qudo preparadopara la próxima vez
             vTaskResume(encender1);
