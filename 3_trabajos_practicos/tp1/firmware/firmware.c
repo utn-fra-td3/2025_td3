@@ -5,8 +5,8 @@
 #include "task.h"
 
 // Definicion de tiempos del led
-#define LED_ON_TIME 1000 // en ms
-#define LED_OFF_TIME 1500 // en ms
+#define LED_ON_TIME 500 // en ms
+#define LED_OFF_TIME 500 // en ms
 
 
 /**
