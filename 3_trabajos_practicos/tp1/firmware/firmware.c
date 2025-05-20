@@ -6,9 +6,9 @@
 void task_init(void *params) {
     // Inicializacion de GPIO
     gpio_init(PICO_DEFAULT_LED_PIN);
-    gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT );
+    gpio_set_dir(PICO_DEFAULT_LED_PIN, true );
     gpio_put(PICO_DEFAULT_LED_PIN, 0);
-    // Elimino la tarea para liberar recursos
+    // Se elimina la tarea para liberar recursos
     vTaskDelete(NULL);
 }
 
@@ -17,17 +17,17 @@ void task_led_on(void *params)
     while(1) {
         gpio_put(PICO_DEFAULT_LED_PIN, 1);  // Encendido el led
 
-        vTaskDelay(pdMS_TO_TICKS(1000));  // Demora para volver a encender
+        vTaskDelay(pdMS_TO_TICKS(2500));  // Demora para volver a encender (la suma del tiempo encendido y el tiempo de apagado, es decir, el periodo)
     }
 }
 
 void task_led_off(void *params)
 {
-    vTaskDelay(pdMS_TO_TICKS(500)); // Desfase inicial de 500ms para diferenciarse con la tarea anterior
+    vTaskDelay(pdMS_TO_TICKS(1000)); // Desfase inicial para diferenciarse con la tarea anterior
 
     while(1) {
         gpio_put(PICO_DEFAULT_LED_PIN, 0);  // Apagado del led
-        vTaskDelay(pdMS_TO_TICKS(1000));  // Demora para volver a apagar
+        vTaskDelay(pdMS_TO_TICKS(2500));  // Demora para volver a apagarD(la suma del tiempo encendido y el tiempo de apagado, es decir, el periodo)
     }
 }
 
