@@ -50,7 +50,7 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../freertos ${CMAKE_BINARY_DIR}/freer
 # Add the standard library to the build
 target_link_libraries(firmware
         pico_stdlib
-        hardware_adc
+        hardware_adc       
         freertos)
 
 # Add the standard include files to the build

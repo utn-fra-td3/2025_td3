@@ -2,44 +2,71 @@
 #include <stdlib.h>
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
+#include "hardware/irq.h"
 // INCLUDE FREERTOS
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 
-// Handles de las tareas
-TaskHandle_t htask_ADC;
-TaskHandle_t htask_Print;
-
 // Handle de la cola
 QueueHandle_t q_ADC;
 
-// Struct de dato de la cola
-typedef float q_ADC_t;
+// Cantidad de muestras del adc
+#define ADC_MUESTRAS 4
+
+// ISR ADC
+void adc_ISR(void)
+{
+    static BaseType_t xHPTW = pdFALSE;
+    // Acumulador de muestras
+    uint32_t adc_raw = 0;
+
+    // Deshabilito interrupcion y conversion
+    adc_irq_set_enabled(false);
+    adc_run(false);
+
+    // Leo muestras del FIFO y acumulo
+    for(uint8_t i = 0; i < ADC_MUESTRAS; i++){
+        adc_raw += adc_fifo_get();
+    }
+    // Limpio el FIFO
+    adc_fifo_drain();
+    // Envio desde la ISR
+    xQueueSendFromISR(q_ADC, &adc_raw, &xHPTW);
+}
 
 // TAREA ADC
 static void task_ADC(void *pvParam)
 {
-    uint16_t adc_raw;
-    const float adc_factor = 3.3f / (1<<12);
-    float adc_voltage; 
-    float temperatura;
-
+    // Loop de ejecucion
     while(1){
-        adc_raw = adc_read();
-        adc_voltage = adc_raw * adc_factor;
-        temperatura = 27 - (adc_voltage - 0.706)/0.001721;
-        xQueueSend(q_ADC, &temperatura, portMAX_DELAY);
+        // Habilito la irq y conversion
+        adc_irq_set_enabled(true);
+        adc_run(true);
+        // Delay de 1 seg
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
 // TAREA PRINT
 static void task_Print(void *pvParam)
 {
+    uint32_t data;
+    float adc_promedio;
+    const float adc_FACTOR = 3.3f / (1<<12);
+    float adc_voltage; 
     float temperatura;
+
     while(1){
-        xQueueReceive(q_ADC, &temperatura, portMAX_DELAY);
-        printf("Temperatura = %.2fC\n", temperatura);
+        // Intento recibir de la cola
+        if(xQueueReceive(q_ADC, &data, portMAX_DELAY) == pdPASS){
+            // Calculo temperatura
+            adc_promedio = data / ADC_MUESTRAS;
+            adc_voltage = adc_promedio * adc_FACTOR;
+            temperatura = 27 - (adc_voltage - 0.706)/0.001721;
+            // Imprimo
+            printf("Temperatura = %.2fC\n", temperatura);
+        }
     }
 }
 
@@ -54,18 +81,28 @@ int main()
     // ADC select input del sensor
     adc_select_input(ADC_TEMPERATURE_CHANNEL_NUM);
 
+    // Config IRQ ADC
+    // Seteo el FIFO del ADC (size 1)
+    adc_fifo_setup(true, false, ADC_MUESTRAS, false, false);
+    // Habilito irq del adc
+    adc_irq_set_enabled(true);
+    // Asocio handler de IRQ del FIFO a la funcion ISR (asociada al core en ejecucion)
+    irq_set_exclusive_handler(ADC_IRQ_FIFO, adc_ISR);
+    // Habilito IRQ del FIFO (en el core en ejecucion)
+    irq_set_enabled(ADC_IRQ_FIFO, true);
+
+    // ADC en modo free running
+    adc_run(true);
+
     // Creo la cola para la temperatura
-    q_ADC = xQueueCreate(1, sizeof(q_ADC_t));
+    q_ADC = xQueueCreate(1, sizeof(uint32_t));
 
     // Creo las tareas
-    xTaskCreate(task_ADC, "task_ADC", configMINIMAL_STACK_SIZE, NULL, 2, &htask_ADC);
-    xTaskCreate(task_Print, "task_Print", 2*configMINIMAL_STACK_SIZE, NULL, 1, &htask_Print);
+    xTaskCreate(task_ADC, "ADC", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+    xTaskCreate(task_Print, "Print", 2*configMINIMAL_STACK_SIZE, NULL, 2, NULL);
 
     // START SCHEDULER
     vTaskStartScheduler();
 
-    while (true) {
-        printf("Hello, world!\n");
-        sleep_ms(1000);
-    }
+    while (true);
 }
