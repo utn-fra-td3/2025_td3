@@ -34,11 +34,11 @@ void Tarea_Prende(void *params) {
 void Tarea_Apaga(void *params) {
     while(1){
         // Demora de ticks equivalentes a 1000 ms   
-        vTaskDelay(pdMS_TO_TICKS(500));     
+        vTaskDelay(pdMS_TO_TICKS(1000));     
         // Toggle
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN,0);
         // Demora de ticks equivalentes a 3000 ms
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(1500));
         //Despauso la Tarea Prende
         vTaskResume(TareaPrendeHandler);
         //Suspendo la Tarea Apaga
