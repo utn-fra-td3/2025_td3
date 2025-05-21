@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
-
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
@@ -26,6 +25,7 @@ QueueHandle_t queue_sensor;
 void task_print(void *params) {
     // Estructura para la cola
     sensor_data_t data = {0};
+    
 
     while(1) {
         // Leo el ultimo valor que haya en la cola
