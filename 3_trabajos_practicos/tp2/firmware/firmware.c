@@ -29,22 +29,16 @@ void adc_irq_handler(void) {
     adc_irq_set_enabled(false);                          // PARO LA INTERRUPCON
     adc_run(false);                                      // DESHABILITO EL ADC
     
-    uint32_t raw = 0;                                    // VARIABLE PARA PROMEDIO
+    uint32_t adc_value = 0;                              // VARIABLE PARA PROMEDIO
 
-    for(uint8_t i = 0; i < SAMPLES; i++) 
+    for(uint8_t i = 0; i < SAMPLES; i++)                 
         { 
-            raw += adc_fifo_get(); 
+            adc_value += adc_fifo_get();                  // LEO EL FIFO PARA LA CANTIDAD DE MUESTRAS QUE ELEGI
         }
 
     adc_fifo_drain();                                     // LIMPIO EL FIFO
 
-    sensor_data data = { .raw = (uint16_t) (raw / SAMPLES) };     // CALCULO DE TEMPERATURA
-    data.voltage = data.raw * 3.3 / (1 << 12);                      // CALCULO DE TEMPERATURA
-    data.temperature = 27 - (data.voltage - 0.706) / 0.001721;      // CALCULO DE TEMPERATURA
-
     xQueueOverwriteFromISR(q_adc, &data, &to_higher_priority_task);      // ENVIO EL DATO A LA COLA
-
-    portYIELD_FROM_ISR(to_higher_priority_task);            // CHEQUEO SI HAY QUE CAMBIAR DE TAREA
 }
 
 void task_print_temp(void *params)
@@ -52,9 +46,13 @@ void task_print_temp(void *params)
     sensor_data data = {0};                                   //  DEFINO ESTRUCTURA PARA LA COLA E INICIALIZO EN 0
     while (1)
     {
-        xQueuePeek(q_adc, &data, portMAX_DELAY);                //  LEO EL ULTIMO VALOR EN LA COLA
-        printf("Temperature: %.2f C\n\n", data.temperature);    //  ESCRIBO EL VALOR EN LA PANTALLA
-        vTaskDelay(pdMS_TO_TICKS(100));                        //  LE DOY DELAY A LA CONSOLA
+        xQueuePeek(q_adc, &data, portMAX_DELAY);                        //  LEO EL ULTIMO VALOR EN LA COLA
+
+        sensor_data data = { .raw = (uint16_t) (raw / SAMPLES) };       // CALCULO DE TEMPERATURA
+        data.voltage = data.raw * 3.3 / (1 << 12);                      // CALCULO DE TEMPERATURA
+        data.temperature = 27 - (data.voltage - 0.706) / 0.001721;      // CALCULO DE TEMPERATURA
+
+        printf("Temperatura: %.2f C\n\n", data.temperature);    //  ESCRIBO EL VALOR EN LA PANTALLA
     }
     
 }
@@ -67,9 +65,9 @@ void task_init(void *params) {
 
     adc_fifo_setup(true, false, SAMPLES, false, false);          // SETEO EL FIFO
     adc_irq_set_enabled(true);                                   // ACTIVO LA INTERRUPCIN DEL ADC
-    irq_set_exclusive_handler(ADC_IRQ_FIFO, adc_irq_handler);
-    irq_set_enabled(ADC_IRQ_FIFO, true);
-    adc_run(true);
+    irq_set_exclusive_handler(ADC_IRQ_FIFO, adc_irq_handler);    // CONSULTAR
+    irq_set_enabled(ADC_IRQ_FIFO, true);                         // CONSULTAR
+    adc_run(true);                                               // PONGO A CORRER AL ADC
 
     q_adc = xQueueCreate(1, sizeof(sensor_data));                // INICIALIZO LA COLA
 
