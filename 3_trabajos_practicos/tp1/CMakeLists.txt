@@ -33,6 +33,8 @@ project(TP1 C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+add_subdirectory({CMAKE_CURRENT_LIST_DIR}/../freertos ${CMAKE_BINARY_DIR}/freertos)
+
 # Add executable. Default name is the project name, version 0.1
 
 add_executable(TP1 TP1.c )
@@ -42,13 +44,12 @@ pico_set_program_version(TP1 "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(TP1 0)
-pico_enable_stdio_usb(TP1 0)
+pico_enable_stdio_usb(TP1 1)
 
 # Add the standard library to the build
 target_link_libraries(TP1 
     pico_stdlib 
-    
-    
+    freertos
     )
 
 # Add the standard include files to the build

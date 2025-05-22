@@ -23,7 +23,7 @@ void task_led_on(void *params) {
        
         vTaskResume(handle_led_off);  // Reactivo la tarea de apagar LED
         vTaskSuspend(NULL);           // Suspendo esta tarea
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
@@ -36,7 +36,7 @@ void task_led_off(void *params) {
         
         vTaskResume(handle_led_on);   // Reactivo la tarea de prender LED
         vTaskSuspend(NULL);           // Suspendo esta tarea
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(15000));
 
     }
 }
